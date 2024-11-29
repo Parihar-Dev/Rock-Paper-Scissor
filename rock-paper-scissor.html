@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rock Paper Scissors Game</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+            * {
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                margin: 0;
+                background-color: black;
+            }
+            .title-decor {
+                font-weight: 500;
+                margin-top: 30px;
+                text-align: center;
+                align-content: center;
+                font-size: larger;
+                background-color: rgba(255, 140, 0, 0.8);
+                height: 100px;
+                color: white;
+            }
+            .result img,.block img{
+                height: 198px;
+                width: 198px;
+                object-fit: cover;
+                border-radius: 150px;
+                cursor: pointer;
+                border: 3px solid black;
+            }
+            .result img {
+                margin-left: 30px;
+                margin-right: 30px;
+            }
+            .block p {
+                color: white;
+                text-align: center;
+            }
+            .block img:hover {
+                height: 198px;
+                width: 198px;
+                border: 3px solid rgb(255, 140, 0);
+            }
+            .moves {
+                display: flex;
+                justify-content: space-between;
+                margin-left: 150px;
+                margin-right: 150px;
+                margin-top: 30px;
+                margin-bottom: 50px;
+            }
+            .score-title {
+                background-color: white;
+                color: black;
+                padding: 8px 24px;
+                font-weight: 500;
+                border-radius: 8px;
+            }
+            .scores {
+                margin-left: 300px;
+                margin-right: 300px;
+            }
+            .score {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: white;
+                font-weight: 500;
+                margin-bottom: 50px;
+            }
+            .result p {
+                color: white;
+                display: flex;
+                align-items: center;
+            }
+            .result {
+                display: flex;
+                justify-content: space-around;
+            }
+            .result-title {
+                display: flex;
+                justify-content: center;
+                color: white;
+            }
+            .reset-score {
+                display: flex;
+                justify-content: center;
+                background-color: green;
+                color: white;
+                padding: 8px 24px;
+                font-size: small;
+                font-weight: 500;
+                border-radius: 8px;
+                margin: 20px auto;
+                cursor: pointer;
+                border: none;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="title-decor">Rock Paper Scissor</div>
+        <div class="moves">
+            <div class="block">
+                <img src="Stone.jpeg" alt="stone" onclick="playGame('Stone')">
+                <p>Stone</p>
+            </div>
+            <div class="block">
+                <img src="Paper.jpeg" alt="paper" onclick="playGame('Paper')">
+                <p>Paper</p>
+            </div>
+            <div class="block">
+                <img src="Scissor.jpeg" alt="scissor" onclick="playGame('Scissor')">
+                <p>Scissor</p>
+            </div>
+        </div>
+        <div class="scores">
+            <div class="score">
+                <div class="score-title">Score : </div>
+                <div>Wins: <span id="wins">0</span></div>
+                <div>Losses: <span id="losses">0</span></div>
+                <div>Tie: <span id="tie">0</span></div>
+            </div>
+        </div>
+        <div class="result"></div>
+        <div class="result-title"></div>
+        <div><button class="reset-score" onclick="resetscore()">Reset Score</button></div>
+        <script>
+            let scoreCounter = JSON.parse(localStorage.getItem('scoreCounter')) || {
+                wins: 0,
+                losses: 0,
+                tie: 0
+            };
+            function updateScore() {
+                document.getElementById('wins').textContent = scoreCounter.wins;
+                document.getElementById('losses').textContent = scoreCounter.losses;
+                document.getElementById('tie').textContent = scoreCounter.tie;
+            }
+            function resetscore() {
+                scoreCounter = {wins: 0, losses: 0, tie: 0};
+                localStorage.setItem('scoreCounter', JSON.stringify(scoreCounter));
+                updateScore();
+            }
+            function playGame(playerMove) {
+                const moves = ['Stone', 'Paper', 'Scissor'];
+                const compMove = moves[Math.floor(Math.random() * 3)];
+                let result = '';
+
+                if (playerMove === compMove) {
+                    result = 'It\'s a Tie!';
+                    scoreCounter.tie++;
+                } else if (
+                    (playerMove === 'Stone' && compMove === 'Scissor') ||
+                    (playerMove === 'Paper' && compMove === 'Stone') ||
+                    (playerMove === 'Scissor' && compMove === 'Paper')
+                ) {
+                    result = 'You Win!';
+                    scoreCounter.wins++;
+                } else {
+                    result = 'Computer Wins!';
+                    scoreCounter.losses++;
+                }
+
+                document.querySelector('.result').innerHTML = `
+                    <p>Your Move : <img src="${playerMove}.jpeg" alt="${playerMove}"></img></p>
+                    <p><img src="${compMove}.jpeg" alt="${compMove}"></img> : Computer's Move</p>
+                `;
+                document.querySelector('.result-title').innerHTML = `
+                    <h2>${result}</h2>
+                `;
+                updateScore();
+                localStorage.setItem('scoreCounter', JSON.stringify(scoreCounter));
+            }
+            document.body.addEventListener('keydown',() => {
+                console.log(event.key);
+            });
+        </script>
+    </body>
+</html>
