@@ -170,6 +170,9 @@
                 updateScore();
                 localStorage.setItem('scoreCounter', JSON.stringify(scoreCounter));
             }
+            window.onload = function() {
+                updateScore();
+            }
             document.body.addEventListener('keydown',() => {
                 console.log(event.key);
             });
